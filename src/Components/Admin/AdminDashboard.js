@@ -13,14 +13,14 @@ import Switch from "react-switch";
 class Admindashboard extends React.Component {
 
     constructor(props) {
-        
+
         super(props);
         this.state = {
             dataList: [],
             soldstatus: "",
             notListedDataList: [],
-            checked:true
-            
+            checked: true
+
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -53,8 +53,8 @@ class Admindashboard extends React.Component {
         })
     }
 
-    hide = (id,i) => {
-        console.log("iddddd=====",id, i,this.state.checked)
+    hide = (id, i) => {
+        console.log("iddddd=====", id, i, this.state.checked)
         // axios.post(api.API_URL + "updatelisteddata", { "id": id }).then((resp) => {
         //     console.log("resp>>>>>>>>>>>",resp)
         // }).catch((err) => {
@@ -62,12 +62,12 @@ class Admindashboard extends React.Component {
         // })
     }
 
-    handleChange(id,i,checked) {
+    handleChange(id, i, checked) {
         this.setState({ checked });
-        console.log("iddddd=====",id, i,this.state.checked)
+        console.log("iddddd=====", id, i, this.state.checked)
 
 
-      }
+    }
 
     // show = (id) => {
     //     console.log("id++++++++", id)
@@ -151,8 +151,13 @@ class Admindashboard extends React.Component {
                                                                         <td>{list.tokenId}</td>
                                                                         <td>{list.owner}</td>
                                                                         <td>{list.price}</td>
-                                                                        <Switch onChange={this.handleChange.bind(this,list._id,i)} checked={this.state.checked} />
+                                                                        <td>
 
+
+
+                                                                            
+                                                                            <Switch onChange={this.handleChange.bind(this, list._id, i)} checked={this.state.checked} />
+                                                                        </td>
                                                                         {/* <button onClick={() => this.hide(list._id,i)}>Hide</button> */}
 
                                                                         {/* <button onClick={() => this.show(list._id)}>Show</button> */}
