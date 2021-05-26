@@ -65,7 +65,7 @@ function Header(props) {
   };
   const logout = () => {
     sessionStorage.clear();
-    window.location.reload();
+    history.push("/");
   };
   const generateasset = () => {
     if (jwttoken) {

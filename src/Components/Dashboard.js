@@ -95,7 +95,7 @@ class Dashboard extends React.Component {
                            </a>
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                           <a href="/Browse" class="d-block">
+                           <a href="/Home" class="d-block">
                               <span class="image-bg">
                                  <span class="image-shop-scroll demo-page2"></span>
                               </span>

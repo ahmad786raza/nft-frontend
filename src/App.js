@@ -27,7 +27,7 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route exact path="/Dashboard" component={Dashboard} />
+        <Route exact path="/" component={Dashboard} />
         <Route exact path="/Index" component={Index} />
         <Route exact path="/Forgotpassword" component={Forgotpassword} />
         <Route exact path="/Browse" component={Browse} />
@@ -40,9 +40,10 @@ function App() {
         <Route exact path="/PrivacyPolicy" component={PrivacyPolicy} />
         <Route exact path="/History" component={History} />
         <Route exact path="/Gopro" component={Gopro} />
+        
 
 
-        <Route exact path="/" component={Home} />
+        <Route exact path="/Home" component={Home} />
         <Route exact path="/Detail" component={Detail} />
         <Route exact path="/Signup" component={Signup} />
         <Route exact path="/Signin" component={Signin} />
