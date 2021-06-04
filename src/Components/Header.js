@@ -10,20 +10,20 @@ let showSearchModal;
 function Header(props) {
   console.log("props header-----", props);
   let ASSET = [];
-
-  const userName = localStorage.getItem('currentUserName')
-  const  names = userName.split(' ');
-  const initials = names[0].substring(0, 1).toUpperCase();
-
-  const [toggle, setToggle] = useState(false)
-
-
-  const handleStyle =(e)=>{
-    e.preventDefault();
-    // this.setState({isToggle: !this.state.isToggle})
-    setToggle(!toggle)
+  let initials;
+  const userName = localStorage.getItem("currentUserName");
+  if (userName) {
+    const names = userName.split(" ");
+    initials = names[0].substring(0, 1).toUpperCase();
   }
 
+  const [toggle, setToggle] = useState(false);
+
+  const handleStyle = (e) => {
+    e.preventDefault();
+    // this.setState({isToggle: !this.state.isToggle})
+    setToggle(!toggle);
+  };
 
   if (props.fromScreen == "Home") {
     for (let i = 0; i < props.dataList.length; i++) {
@@ -43,7 +43,7 @@ function Header(props) {
       if (event.soldstatus == "1") {
         swal({ title: "This NFT is Sold", icon: "error" });
       } else {
-          hideModal();
+        hideModal();
         history.push({
           pathname: "/Detail",
           state: {
@@ -66,7 +66,6 @@ function Header(props) {
       display: "flex",
     }),
   };
-
 
   jwttoken = sessionStorage.getItem("token");
   const history = useHistory();
@@ -94,14 +93,12 @@ function Header(props) {
     }
   };
 
-
-
   const openModal = (event) => {
-    document.body.classList.add('search-active');
-  }
+    document.body.classList.add("search-active");
+  };
   const hideModal = (event) => {
-    document.body.classList.remove('search-active');
-  }
+    document.body.classList.remove("search-active");
+  };
 
   return (
     <>
@@ -147,15 +144,26 @@ function Header(props) {
                         </li>
 
                         <li className="nav-item menu-menu-parent">
-                            <a className="nav-link" href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain" target="_blank">Meatmask Tutorials</a>
+                          <a
+                            className="nav-link"
+                            href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain"
+                            target="_blank"
+                          >
+                            Meatmask Tutorials
+                          </a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link" onClick={generateasset} href="" rel="noopener noreferrer">
+                          <a
+                            className="nav-link"
+                            onClick={generateasset}
+                            href=""
+                            rel="noopener noreferrer"
+                          >
                             Generate Asset
                           </a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link" onClick={historyPage} href="" >
+                          <a className="nav-link" onClick={historyPage} href="">
                             History
                           </a>
                         </li>
@@ -166,76 +174,86 @@ function Header(props) {
                 <div className="header-right-btn">
                   <ul>
                     <li>
-                      <a className="theme-btn search-btn" onClick={openModal} >
+                      <a className="theme-btn search-btn" onClick={openModal}>
                         <i className="fas fa-search"></i>
                       </a>
                     </li>
-                    
+
                     {jwttoken != null ? (
-                        
-                        <li>
-                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
-                              <div className="user-panel-header-top-right clearfix">
-                                 <div className="user-panel-profile-header">
-                                    <h3>Welcome! {userName}  <a href=""  ><span onClick={handleStyle} >{initials}</span></a></h3>
-                                    <div className="profile-dropdown" style={{display: toggle ? 'block': 'none'}}>
-                                       <ul className="user-links">
-                                          <li><a href="/Profile">Profile</a></li>
-                                          <li><a href="/Mynft">MyNft</a></li>
-                                          {/* <li><a href="/Home">Create a Store</a></li>  */}
-                                          <li><a href="/Contact">Help</a></li>
-                                          <li><a href="" onClick={logout} className="user-logout">Logout</a></li>
-                                       </ul>
-                                    </div>
-                                 </div>
+                      <li>
+                        <div className="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                          <div className="user-panel-header-top-right clearfix">
+                            <div className="user-panel-profile-header">
+                              <h3>
+                                Welcome! {userName}{" "}
+                                <a href="">
+                                  <span onClick={handleStyle}>{initials}</span>
+                                </a>
+                              </h3>
+                              <div
+                                className="profile-dropdown"
+                                style={{ display: toggle ? "block" : "none" }}
+                              >
+                                <ul className="user-links">
+                                  <li>
+                                    <a href="/Profile">Profile</a>
+                                  </li>
+                                  <li>
+                                    <a href="/Mynft">MyNft</a>
+                                  </li>
+                                  {/* <li><a href="/Home">Create a Store</a></li>  */}
+                                  <li>
+                                    <a href="/Contact">Help</a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href=""
+                                      onClick={logout}
+                                      className="user-logout"
+                                    >
+                                      Logout
+                                    </a>
+                                  </li>
+                                </ul>
                               </div>
-                           </div>
-
-                    </li>
-                        ) : (
-                            <li>
-                    <a className="theme-btn" href="" onClick={login}>Login</a>
-
-                    </li>
-                           
-                        )}
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ) : (
+                      <li>
+                        <a className="theme-btn" href="" onClick={login}>
+                          Login
+                        </a>
+                      </li>
+                    )}
                   </ul>
-                 
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-
-
-      
-
-
       </div>
 
-      <div class="header-search-box" >
-         <div class="header-search-box-main">
-            <div class="nft-input-box validate-input" data-validate="Name is required">
-
-               <Select
-                                        className="basic-single"
-                                        classNamePrefix="Enter NFT-Asset Name"
-                                        options={ASSET}
-                                        onChange={(selectedAsset) => handleChange(selectedAsset)}
-                                        styles={colourStyles}
-                                    />
-
-               
-            </div>
-         </div>
+      <div class="header-search-box">
+        <div class="header-search-box-main">
+          <div
+            class="nft-input-box validate-input"
+            data-validate="Name is required"
+          >
+            <Select
+              className="basic-single"
+              classNamePrefix="Enter NFT-Asset Name"
+              options={ASSET}
+              onChange={(selectedAsset) => handleChange(selectedAsset)}
+              styles={colourStyles}
+            />
+          </div>
+        </div>
       </div>
       <div class="search-close" onClick={hideModal}>
-         <i class="fas fa-times"></i>
+        <i class="fas fa-times"></i>
       </div>
-
-      
     </>
   );
 }
