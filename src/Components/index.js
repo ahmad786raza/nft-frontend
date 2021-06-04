@@ -256,7 +256,7 @@ class Index extends React.Component {
                                                             <img  src={api.IPFS_URL + list.ipfsHash} alt="" />
                                                         </div>
                                                         <h3 className="theme-title"><a href="">{list.assetName}</a></h3>
-                                                        <h3 className="theme-title"><a href="">{list.description}</a></h3>
+                                                        <h3 className="theme-title"><a href="">{(list.description).toString().substring(0,20)}</a></h3>
 
                                                         {/* <p className="theme-description">Highest bid <span>2.5 WETH</span></p>
                                                         <div className="item-group-btn">
