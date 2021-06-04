@@ -32,7 +32,7 @@ class Contact extends React.Component {
                                         </div>
                                         <div class="bradcrumb-right clearfix">
                                             <ul class="clearfix">
-                                                <li><a href="index.html">Home</a></li>
+                                                <li><a href="/Index">Home</a></li>
                                                 <li>Contact</li>
                                             </ul>
                                         </div>

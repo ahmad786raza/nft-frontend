@@ -21,14 +21,18 @@ import TermsOfUse from './Components/TermsOfUse';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import History from './Components/History';
 import Gopro from './Components/GoPro';
+import Mynft from './Components/MyNft';
+import Profile from './Components/Profile';
+import Detailexplore from './Components/DetailsExplore';
+
 
 
 function App() {
   return (
     <div className="App">
       <Switch>
-        <Route exact path="/" component={Dashboard} />
-        <Route exact path="/Index" component={Index} />
+        <Route exact path="/" component={Index} />
+        <Route exact path="/Dashboard" component={Dashboard} />
         <Route exact path="/Forgotpassword" component={Forgotpassword} />
         <Route exact path="/Browse" component={Browse} />
         <Route exact path="/Success" component={Success} />
@@ -40,7 +44,11 @@ function App() {
         <Route exact path="/PrivacyPolicy" component={PrivacyPolicy} />
         <Route exact path="/History" component={History} />
         <Route exact path="/Gopro" component={Gopro} />
-        
+        <Route exact path="/Mynft" component={Mynft} />
+        <Route exact path="/Profile" component={Profile} />
+        <Route exact path="/Detailexplore" component={Detailexplore} />
+
+
 
 
         <Route exact path="/Home" component={Home} />

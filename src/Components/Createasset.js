@@ -97,13 +97,12 @@ class Createassets extends React.Component {
     const ownerethaddress = config.Platform_address;
 
     var email = localStorage.getItem("currentUserEmail");
+    var username = localStorage.getItem('currentUserName');
     var token = sessionStorage.getItem("token");
     var self = this;
     console.log("jwttoken=", token, email);
     if (this.state.assetName === "" || this.state.assetName === null) {
       return swal({ title: "Enter your asset name", icon: "error" });
-    } else if (this.state.price === "" || this.state.price === null) {
-      return swal({ title: "Enter your pay amount", icon: "error" });
     } else if (
       this.state.selectedFile === "" ||
       this.state.selectedFile === null
@@ -147,91 +146,66 @@ class Createassets extends React.Component {
               .mint(this.state.assetName, this.state.ipfsHash)
               .send({ from: this.state.account })
               .once("receipt", (receipt) => {
-                console.log("receipt==========", receipt);
-                this.setState({ loader: false });
-                swal({
-                  title: "Do you want to list your token for Selling?",
-                  // text: "Once deleted, you will not be able to recover this imaginary file!",
-                  icon: "warning",
-                  buttons: true,
-                  dangerMode: true,
-                }).then((yes) => {
-                  this.setState({ loader: true });
-                  if (yes) {
-                    console.log("ssssssxxxx", ownerethaddress, tokenId);
-                    self.state.contract.methods
-                      .approve(ownerethaddress, tokenId)
-                      .send({ from: this.state.account })
-                      .once("receipt", (receipts) => {
-                        console.log("reciepts ====>", receipts);
-                        this.setState({ loader: false });
-                        swal({
-                          title: "Your token has been added to list!",
-                          icon: "success",
-                        });
-                        const data = new FormData();
-                        data.append("assetName", this.state.assetName);
-                        data.append("price", this.state.price);
-                        data.append("description", this.state.description);
-                        data.append("owner", this.state.account);
-                        data.append("tokenId", tokenId);
-                        data.append("ipfsHash", this.state.ipfsHash);
-                        data.append("email", email);
-                        // console.log("ipfshashstate", this.state.ipfsHash)
-                        let url = api.API_URL + "uploadImage";
-                        const config = {
-                          headers: {
-                            "content-type": "multipart/form-data",
-                            authtoken: token,
-                          },
-                        };
-                        axios
-                          .post(url, data, config)
-                          .then((result) => {
-                            console.log("resultDataupload_image", result);
-                            this.setState({ loader: false });
-                            this.props.history.push("/");
-                          })
-                          .catch((errr) => {
-                            this.setState({ loader: false });
-                          });
-                      });
-                  } else {
-                    let url = api.API_URL + "tokennotlist";
-                    const config = {
-                      headers: {
-                        authtoken: token,
-                      },
-                    };
+                console.log("receipt==========", receipt,token);
 
-                    axios
-                      .post(
-                        url,
-                        {
-                          assetName: this.state.assetName,
-                          price: this.state.price,
-                          description: this.state.description,
-                          owner: this.state.account,
-                          tokenId: tokenId,
-                          ipfsHash: this.state.ipfsHash,
-                          email: email,
-                        },
-                        config
-                      )
-                      .then((resultdata) => {
-                        console.log("resultDataupload_image", resultdata);
-                        this.setState({ loader: false });
-                        swal({
-                          title: "Thanks for Generating Tokens",
-                          icon: "info",
-                        });
-                        this.props.history.push("/");
-                      })
-                      .catch((errr) => {
-                        this.setState({ loader: false });
-                      });
-                  }
-                });
+
+                // const config = {
+                //             headers: {
+                //               "authtoken": token
+                //             }
+                //           };
+
+                // axios.post(api.API_URL+'tokendetails',{
+                //   assetName: this.state.assetName,
+                //   description: this.state.description,
+                //   tokenId: tokenId,
+                //   ipfsHash: this.state.ipfsHash
+                // },config).then((resval)=>{
+                //   console.log('respdata====',resval)
+                // }).catch((errss)=>{
+                //   console.log('errss====',errss)
+                // })
+
+
+
+                let url = api.API_URL + "generateAssets";
+                const config = {
+                  headers: {
+                    authtoken: token,
+                  },
+                };
+
+                axios
+                  .post(
+                    url,
+                    {
+                      assetName: this.state.assetName,
+                      description: this.state.description,
+                      owner: this.state.account,
+                      tokenId: tokenId,
+                      ipfsHash: this.state.ipfsHash,
+                      email: email,
+                      username:username
+                    },
+                    config
+                  )
+                  .then((resultdata) => {
+                    console.log("resultDataupload_image", resultdata);
+                    this.setState({ loader: false });
+                    swal({
+                      title: "Thanks for Generating Tokens",
+                      icon: "info",
+                    }).then((respss)=>{
+                      
+                      this.props.history.push("/Mynft");
+
+                    }).catch((errrs)=>{
+                      console.log('errror',errrs)
+                    })
+                  })
+                  .catch((errr) => {
+                    this.setState({ loader: false });
+                  });
               })
               .catch((errror) => {
                 console.log("metamask", errror);
@@ -336,7 +310,7 @@ class Createassets extends React.Component {
                         </label>
                         <input class="theme-input" type="" name=""  value={this.state.assetName} onChange={this.handleAssetName} />
                       </div>
-                      <div class="theme-input-box">
+                      {/* <div class="theme-input-box">
                         <label>
                           Price {" "}
                           <i
@@ -345,7 +319,7 @@ class Createassets extends React.Component {
                           ></i>
                         </label>
                         <input class="theme-input" type="" name="" placeholder="Price in BNB" value={this.state.price} onChange={this.handlePrice}  />
-                      </div>
+                      </div> */}
 
                       <div class="theme-input-box">
                         <label>
@@ -376,9 +350,6 @@ class Createassets extends React.Component {
                             (items should be images/ GIFs)
                           </p>
                         </div>
-
-
-                        <input type="file" className="" placeholder="Upload your img" onChange={this.onFileChange} />
                       </div>
 
 
@@ -433,7 +404,7 @@ class Createassets extends React.Component {
               <div class="row">
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
                   <div class="footer-widget">
-                    <a href="index.html">
+                    <a href="/">
                       <img src="assets/images/logo-white.png" alt="" />
                     </a>
                     <p class="theme-description">
@@ -443,7 +414,7 @@ class Createassets extends React.Component {
                     <div class="footer-links clearfix">
                       <div class="footer-icon-box">
                         <a
-                          href=""
+                          href="#"
                           title="Facebook"
                           style={{ color: "#3b5998" }}
                         >
@@ -451,13 +422,13 @@ class Createassets extends React.Component {
                         </a>
                       </div>
                       <div class="footer-icon-box">
-                        <a href="" title="Twitter" style={{ color: "#00acee" }}>
+                        <a href="#" title="Twitter" style={{ color: "#00acee" }}>
                           <i class="fab fa-twitter"></i>
                         </a>
                       </div>
                       <div class="footer-icon-box">
                         <a
-                          href=""
+                          href="#"
                           title="Linkedin"
                           style={{ color: "#0e76a8" }}
                         >
@@ -473,13 +444,13 @@ class Createassets extends React.Component {
                     <div class="footer-menu-services">
                       <ul class="menu-service-menu">
                         <li>
-                          <a href="create-store.html">Create a Store</a>
+                          <a href="/Home">Create a Store</a>
                         </li>
                         <li>
-                          <a href="min-item.html">List an Item for sale</a>
+                          <a href="/Home">List an Item for sale</a>
                         </li>
                         <li>
-                          <a href="login.html">My Profile</a>
+                          <a href="/Signup">My Profile</a>
                         </li>
                       </ul>
                     </div>
@@ -491,13 +462,13 @@ class Createassets extends React.Component {
                     <div class="footer-menu-services">
                       <ul class="menu-service-menu">
                         <li>
-                          <a href="contact.html">Help and support</a>
+                          <a href="/contact">Help and support</a>
                         </li>
                         <li>
-                          <a href="faq.html">FAQ</a>
+                          <a href="/Faq">FAQ</a>
                         </li>
                         <li>
-                          <a href="contact.html">Contact us</a>
+                          <a href="/Contact">Contact us</a>
                         </li>
                       </ul>
                     </div>
@@ -509,13 +480,13 @@ class Createassets extends React.Component {
                     <div class="footer-menu-services">
                       <ul class="menu-service-menu">
                         <li>
-                          <a href="browse.html">Browse Digital Items</a>
+                          <a href="/Browse">Browse Digital Items</a>
                         </li>
                         <li>
-                          <a href="browse.html">Browse Stores</a>
+                          <a href="/Browse">Browse Stores</a>
                         </li>
                         <li>
-                          <a href="browse.html">Where to buy NFTs</a>
+                          <a href="/Browse">Where to buy NFTs</a>
                         </li>
                       </ul>
                     </div>
@@ -527,13 +498,13 @@ class Createassets extends React.Component {
                     <div class="footer-menu-services">
                       <ul class="menu-service-menu">
                         <li>
-                          <a href="go-pro.html">Premium services</a>
+                          <a href="/Gopro">Premium services</a>
                         </li>
                         <li>
-                          <a href="privacy-policy.html">Privacy Policy</a>
+                          <a href="/PrivacyPolicy">Privacy Policy</a>
                         </li>
                         <li>
-                          <a href="terms-of-use.html">Terms of use</a>
+                          <a href="/TermsOfUse">Terms of use</a>
                         </li>
                       </ul>
                     </div>
@@ -548,7 +519,7 @@ class Createassets extends React.Component {
                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div class="copyright-text text-center">
                     <p>
-                      Copyright 2021 <a href="index.html">NFT Marketplace</a>{" "}
+                      Copyright 2021 <a href="/">NFT Marketplace</a>{" "}
                       All Rights Reserved.
                     </p>
                   </div>

@@ -45,10 +45,10 @@ function Footer() {
                                     <div className="footer-menu-services">
                                         <ul className="menu-service-menu">
                                             <li>
-                                                <a href="create-store.html">Create a Store</a>
+                                                <a href="/Home">Create a Store</a>
                                             </li>
                                             <li>
-                                                <a href="/Minitem">List an Item for sale</a>
+                                                <a href="/Home">List an Item for sale</a>
                                             </li>
                                             <li>
                                                 <a href="/Signin">My Profile</a>

@@ -11,8 +11,18 @@ function Header(props) {
   console.log("props header-----", props);
   let ASSET = [];
 
+  const userName = localStorage.getItem('currentUserName')
+  const  names = userName.split(' ');
+  const initials = names[0].substring(0, 1).toUpperCase();
+
+  const [toggle, setToggle] = useState(false)
 
 
+  const handleStyle =(e)=>{
+    e.preventDefault();
+    // this.setState({isToggle: !this.state.isToggle})
+    setToggle(!toggle)
+  }
 
 
   if (props.fromScreen == "Home") {
@@ -57,6 +67,7 @@ function Header(props) {
     }),
   };
 
+
   jwttoken = sessionStorage.getItem("token");
   const history = useHistory();
 
@@ -75,6 +86,13 @@ function Header(props) {
     }
   };
 
+  const historyPage = () => {
+    if (jwttoken) {
+      history.push("/History");
+    } else {
+      return swal({ title: "Please login!", icon: "error" });
+    }
+  };
 
 
 
@@ -123,7 +141,7 @@ function Header(props) {
                           </a>
                         </li>
                         <li className="nav-item menu-menu-parent">
-                          <a className="nav-link" href="/">
+                          <a className="nav-link" href="/Home">
                             Explore
                           </a>
                         </li>
@@ -132,8 +150,13 @@ function Header(props) {
                             <a className="nav-link" href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain" target="_blank">Meatmask Tutorials</a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link" onClick={generateasset} href="#" rel="noopener noreferrer">
+                          <a className="nav-link" onClick={generateasset} href="" rel="noopener noreferrer">
                             Generate Asset
+                          </a>
+                        </li>
+                        <li className="nav-item">
+                          <a className="nav-link" onClick={historyPage} href="" >
+                            History
                           </a>
                         </li>
                       </ul>
@@ -151,17 +174,33 @@ function Header(props) {
                     {jwttoken != null ? (
                         
                         <li>
-                    <a className="theme-btn" href="#" onClick={logout} >Logout</a>
+                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                              <div className="user-panel-header-top-right clearfix">
+                                 <div className="user-panel-profile-header">
+                                    <h3>Welcome! {userName}  <a href=""  ><span onClick={handleStyle} >{initials}</span></a></h3>
+                                    <div className="profile-dropdown" style={{display: toggle ? 'block': 'none'}}>
+                                       <ul className="user-links">
+                                          <li><a href="/Profile">Profile</a></li>
+                                          <li><a href="/Mynft">MyNft</a></li>
+                                          {/* <li><a href="/Home">Create a Store</a></li>  */}
+                                          <li><a href="/Contact">Help</a></li>
+                                          <li><a href="" onClick={logout} className="user-logout">Logout</a></li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
 
                     </li>
                         ) : (
                             <li>
-                    <a className="theme-btn" href="#" onClick={login}>Login</a>
+                    <a className="theme-btn" href="" onClick={login}>Login</a>
 
                     </li>
                            
                         )}
                   </ul>
+                 
                 </div>
               </div>
             </div>

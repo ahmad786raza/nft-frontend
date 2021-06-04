@@ -42,6 +42,7 @@ class Signin extends React.Component {
                 if (respdata.data.status === true) {
                     sessionStorage.setItem("token", respdata.data.data.token);
                     localStorage.setItem('currentUserEmail', respdata.data.data.email)
+                    localStorage.setItem('currentUserName',respdata.data.data.userName)
                     if (respdata.data.data.email === "erkrujjawal@gmail.com") {
                         this.props.history.push('/admindashboard')
                     } else {
@@ -80,7 +81,7 @@ class Signin extends React.Component {
                         <span className="focus-nft-input"></span>
                      </div>
                      <div className="nft-links-btn">
-                        <a href="/">Forgot My Password ?</a>
+                        <a href="/Forgotpassword">Forgot My Password ?</a>
                      </div>
                      <div className="nft-links-btn">
                         <a onClick={this.signin} className="theme-btn">Log In</a>
@@ -95,7 +96,7 @@ class Signin extends React.Component {
             </div>
             <div className="user-screen-item screen-bg-image text-center">
                <div className="user-logo">
-                  <a href="index.html"><img src={LoGO}/></a>
+                  <a href="/"><img src={LoGO}/></a>
                </div>
             </div>
          </div>

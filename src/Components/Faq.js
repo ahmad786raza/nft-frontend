@@ -19,7 +19,7 @@ function Faq() {
                                     </div>
                                     <div class="bradcrumb-right clearfix">
                                         <ul class="clearfix">
-                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="/Index">Home</a></li>
                                             <li>FAQ'S</li>
                                         </ul>
                                     </div>

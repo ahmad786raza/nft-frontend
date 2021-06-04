@@ -133,7 +133,7 @@ class Signup extends React.Component {
                      </div>
                      <div className="nft-links-btn" >
                         <input className="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1" />
-                        <label htmlFor="styled-checkbox-1"><span>I agree to the <a href="">Terms</a> and <a href="">Privacy Policy</a>.</span></label>
+                        <label htmlFor="styled-checkbox-1"><span>I agree to the <a href="/PrivacyPolicy">Terms</a> and <a href="/PrivacyPolicy">Privacy Policy</a>.</span></label>
                      </div>
                      <div className="nft-links-btn">
                         <input type="submit" className="theme-btn" value="Sign Up" onClick={this.signup}></input>
