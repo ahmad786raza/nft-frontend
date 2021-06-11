@@ -30,24 +30,25 @@ class History extends React.Component {
    }
 
    getUserHistory = () => {
-      let jwtToken = sessionStorage.getItem('token')
-      console.log('jwtToken', jwtToken)
-      if (jwtToken) {
-         const config = {
-            headers: {
-               authtoken: jwtToken,
-            },
-         };
-         axios.get(api.API_URL + 'userhistory', config).then(respData => {
+      let email = localStorage.getItem("currentUserEmail");
+      let jwtToken = sessionStorage.getItem("token");
+      console.log('jwtToken', email)
+      const config = {
+        headers: {
+          authtoken: jwtToken,
+        },
+      };
+
+         axios.post(api.API_URL + 'userhistory', {
+            email:email
+         },config).then(respData => {
             console.log('historydata===========', respData.data.userdetails);
             this.setState({datalist: respData.data.userdetails});
 
          }).catch(errs => {
             console.log('errorrrrr', errs);
          })
-      } else {
-         swal({ title: "Unauthorized access! Login first", icon: "error" });
-      }
+     
    }
 
    handleClick(e) {

@@ -10,6 +10,7 @@ import swal from "sweetalert";
 // import Web3 from 'web3';
 // import asset from "../abis/Assets.json"
 // import Modal from 'react-modal';
+// import QRCode from "react-qr-code";
 // import { ethers } from "ethers";
 // import config from '../config'
 // require('dotenv').config()
@@ -38,7 +39,7 @@ const responsive = {
   },
 };
 
-class Home extends React.Component {
+class Usersnft extends React.Component {
   constructor(props) {
     super(props);
 
@@ -76,6 +77,7 @@ class Home extends React.Component {
       totalDatas: [],
 
       count: 0,
+      username: "",
     };
 
     this.handlePageClick = this.handlePageClick.bind(this);
@@ -84,13 +86,14 @@ class Home extends React.Component {
     this.handleSortExpensive = this.handleSortExpensive.bind(this);
     this.handleSortNew = this.handleSortNew.bind(this);
     this.handleSortOld = this.handleSortOld.bind(this);
-
     this.handleSort = this.handleSort.bind(this);
     this.handleSortN = this.handleSortN.bind(this);
   }
 
   async componentDidMount() {
-    await this.getAllData();
+    var email = this.props.location.state.email;
+    console.log("email======state", email);
+    await this.getAllData(email);
     await this.loadWeb3();
   }
 
@@ -112,31 +115,46 @@ class Home extends React.Component {
     }
   };
 
-  // List of all data in table;
-  getAllData = async () => {
+  //List of all data in table;
+  getAllData = async (email) => {
+    let useremail = email;
+    let jwtToken = sessionStorage.getItem("token");
+    console.log("jwtToken", jwtToken, useremail);
+    const config = {
+      headers: {
+        authtoken: jwtToken,
+      },
+    };
     axios
-      .get(api.API_URL + "getalldata")
+      .post(
+        api.API_URL + "getotherUserData",
+        {
+          email: useremail,
+        },
+        config
+      )
       .then((listdata) => {
-        console.log("getalldatalist=========>", listdata.data.data);
+        console.log("getalldatalist", listdata.data.userdetails[0].username);
 
         this.setState(
           {
-            originalData: listdata.data.data,
-            totalitem: listdata.data.data.length,
-            totalData: listdata.data.data,
+            originalData: listdata.data.userdetails,
+            totalitem: listdata.data.userdetails.length,
+            totalData: listdata.data.userdetails,
+            username: listdata.data.userdetails[0].username,
 
-            dataList: listdata.data.data.slice(
+            dataList: listdata.data.userdetails.slice(
               this.state.offset,
               this.state.offset + this.state.perPage
             ),
-            // totalData: listdata.data.data,
-            // totalData:listdata.data.data.sort( (a, b) => new Date(b.createdAt) - new Date(a.createdAt)) ,
+            // totalData: listdata.data.userdetails,
+            // totalData:listdata.data.userdetails.sort( (a, b) => new Date(b.createdAt) - new Date(a.createdAt)) ,
 
             //  sort : this.state.dataList.sort((a,b) => (this.state.sort === 'lowest')? (a.price < b.price?1:-1):(a.price > b.price?1:-1) ),
 
-            soldstatus: listdata.data.data.soldStatus,
+            soldstatus: listdata.data.userdetails.soldStatus,
             pageCount: Math.ceil(
-              listdata.data.data.length / this.state.perPage
+              listdata.data.userdetails.length / this.state.perPage
             ),
           },
           () => {
@@ -146,10 +164,10 @@ class Home extends React.Component {
               this.state.dataList.length,
               this.state.offset + this.state.perPage
             );
-            // console.log("is it sorting", listdata.data.data.sort((a,b) => a.createdAt > b.createdAt) )
+            // console.log("is it sorting", listdata.data.userdetails.sort((a,b) => a.createdAt > b.createdAt) )
             console.log(
               "dates sort",
-              listdata.data.data.sort(
+              listdata.data.userdetails.sort(
                 (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
               )
             );
@@ -161,15 +179,22 @@ class Home extends React.Component {
       });
   };
 
-  notSoldClick = (data) => {
-    console.log("shomodal=====", data);
-    var jwttoken = sessionStorage.getItem("token");
-    if (jwttoken) {
-      this.props.history.push("/Detailexplore", {
+  notSoldClick = (data, email) => {
+    let signeduserEmail = localStorage.getItem("currentUserEmail");
+    let jwttoken = sessionStorage.getItem("token");
+    console.log("nftsoldclick=====>", data, email);
+    if (signeduserEmail === email) {
+      this.props.history.push("/Detail", {
         tokenID: data,
       });
     } else {
-      swal({ title: "Unauthorized access! Login first", icon: "error" });
+      if (jwttoken) {
+        this.props.history.push("/Detailexplore", {
+          tokenID: data,
+        });
+      } else {
+        swal({ title: "Unauthorized access! Login first", icon: "error" });
+      }
     }
   };
 
@@ -286,7 +311,7 @@ class Home extends React.Component {
   };
 
   render() {
-    console.log("props value render", this.state.dataList, this.props);
+    console.log("props value", this.props);
     return (
       <>
         <Header
@@ -387,10 +412,11 @@ class Home extends React.Component {
                             <div className="row">
                               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                                 <div className="browse-product-left">
-                                  <p>
-                                    Showing: {this.state.dataList.length}/
-                                    {this.state.totalitem}{" "}
-                                  </p>
+                                  <h1>
+                                    {/* Showing: {this.state.dataList.length}/
+                                  {this.state.totalitem}{" "} */}
+                                    {this.state.username.toUpperCase()}'s NFT's
+                                  </h1>
                                 </div>
                               </div>
                               <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
@@ -407,11 +433,21 @@ class Home extends React.Component {
                                 role="tabpanel"
                               >
                                 <div className="row">
-                                  {this.state.dataList.map((list) =>
-                                    list.listingtype === "Listed" ? (
+                                  {this.state.dataList.map(
+                                    (list) =>
+                                      // list.listingtype==="Not-Listed" ? (
+
                                       list.soldStatus === "1" ? (
                                         <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
-                                          <div className="item-group">
+                                          <div
+                                            className="item-group"
+                                            onClick={() =>
+                                              this.notSoldClick(
+                                                list.tokenId,
+                                                list.email
+                                              )
+                                            }
+                                          >
                                             <div className="item-group-content">
                                               <div className="items-like">
                                                 <i className="far fa-heart"></i>
@@ -432,40 +468,44 @@ class Home extends React.Component {
                                                 <a href="">{list.assetName}</a>
                                               </h3>
 
-                                              <p className="theme-description">
-                                                <h2 className="item-price text-muted">
-                                                  {list.price} BNB
-                                                </h2>
-                                              </p>
-                                              <p className="theme-description">
-                                                {" "}
-                                                Sold{" "}
-                                              </p>
+                                              {/* <p className="theme-description">
+                                              <h2 className="item-price text-muted">{list.price} BNB</h2>
+                                            </p> */}
+                                              {/* <p className="theme-description">
+                                              {" "}
+                                            Sold{" "}
+                                            </p> */}
 
-                                              <div className="item-group-btn">
-                                                <a
-                                                  className="theme-btn btn-disabled  text-muted disabled"
-                                                  onClick={() =>
-                                                    this.notSoldClick(
-                                                      list.tokenId
-                                                    )
-                                                  }
-                                                >
-                                                  Sold Out
-                                                </a>
-                                                <a
-                                                  className="item-detail-btn"
-                                                  href=""
-                                                >
-                                                  <i className="fas fa-info-circle"></i>
-                                                </a>
-                                              </div>
+                                              {/* <div className="item-group-btn">
+                                              <a
+                                                className="theme-btn btn-disabled  text-muted disabled"
+                                                onClick={() =>
+                                                  this.notSoldClick(list.tokenId)
+                                                }
+                                              >
+                                                Sold Out
+                                            </a>
+                                              <a
+                                                className="item-detail-btn"
+                                                href=""
+                                              >
+                                                <i className="fas fa-info-circle"></i>
+                                              </a>
+                                            </div> */}
                                             </div>
                                           </div>
                                         </div>
                                       ) : (
                                         <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
-                                          <div className="item-group">
+                                          <div
+                                            className="item-group"
+                                            onClick={() =>
+                                              this.notSoldClick(
+                                                list.tokenId,
+                                                list.email
+                                              )
+                                            }
+                                          >
                                             <div
                                               className="item-group-content"
                                               onClick={() => this.countno(list)}
@@ -489,41 +529,35 @@ class Home extends React.Component {
                                                 <a href="">{list.assetName}</a>
                                               </h3>
 
-                                              <p className="theme-description">
-                                                <h2 class="item-price">
-                                                  {list.price} BNB
-                                                </h2>
-                                              </p>
-                                              <p className="theme-description">
-                                                {" "}
-                                                Not Sold{" "}
-                                              </p>
+                                              {/* <p className="theme-description">
+                                              <h2 class="item-price">{list.price} BNB</h2>
+                                            </p> */}
+                                              {/* <p className="theme-description">
+                                              {" "}
+                                            Not Sold{" "}
+                                            </p> */}
 
-                                              <div className="item-group-btn">
-                                                <a
-                                                  className="theme-btn"
-                                                  onClick={() =>
-                                                    this.notSoldClick(
-                                                      list.tokenId
-                                                    )
-                                                  }
-                                                >
-                                                  Buy Now
-                                                </a>
-                                                <a
-                                                  className="item-detail-btn"
-                                                  href=""
-                                                >
-                                                  <i className="fas fa-info-circle"></i>
-                                                </a>
-                                              </div>
+                                              {/* <div className="item-group-btn">
+                                              <a
+                                                className="theme-btn"
+                                                onClick={() =>
+                                                  this.notSoldClick(list.tokenId)
+                                                }
+                                              >
+                                                Buy Now
+                                            </a>
+                                              <a
+                                                className="item-detail-btn"
+                                                href=""
+                                              >
+                                                <i className="fas fa-info-circle"></i>
+                                              </a>
+                                            </div> */}
                                             </div>
                                           </div>
                                         </div>
                                       )
-                                    ) : (
-                                      ""
-                                    )
+                                    // ):("")
                                   )}
                                 </div>
                               </div>
@@ -540,38 +574,30 @@ class Home extends React.Component {
                               </div>
                             </div>
                           </div>
-
-                          
-
                         </div>
-
-                        
                       </div>
                     </div>
                   </section>
                 </div>
               </div>
 
-              {this.state.dataList.length === 0 ? (
-                ""
-              ) : (
-                <div className="page">
-                  <ReactPaginate
-                    previousLabel={"PREV"}
-                    nextLabel={"NEXT"}
-                    breakLabel={"..."}
-                    breakClassName={"break-me"}
-                    pageCount={this.state.pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={this.handlePageClick}
-                    containerClassName={"pagination"}
-                    subContainerClassName={"pages pagination"}
-                    activeClassName={"active"}
-                    forcePage={this.state.currentPage}
-                  />
-                </div>
-              )}
+              <div className="pages">
+                <ReactPaginate
+                  previousLabel={"PREV"}
+                  nextLabel={"NEXT"}
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={this.state.pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={this.handlePageClick}
+                  containerClassName={"pagination"}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"}
+                  forcePage={this.state.currentPage}
+                  style={{ marginRight: "400px", marginLeft: "-250px" }}
+                />
+              </div>
 
               <Footer />
             </div>
@@ -582,4 +608,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default Usersnft;

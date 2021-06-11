@@ -24,6 +24,8 @@ import Gopro from './Components/GoPro';
 import Mynft from './Components/MyNft';
 import Profile from './Components/Profile';
 import Detailexplore from './Components/DetailsExplore';
+import Rariable from './Components/Rariable';
+import Usersnft from './Components/Usersnft';
 
 
 
@@ -47,6 +49,8 @@ function App() {
         <Route exact path="/Mynft" component={Mynft} />
         <Route exact path="/Profile" component={Profile} />
         <Route exact path="/Detailexplore" component={Detailexplore} />
+        <Route exact path="/Rariable" component={Rariable} />
+        <Route exact path="/Usersnft" component={Usersnft} />
 
 
 

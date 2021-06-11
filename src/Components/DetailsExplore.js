@@ -59,6 +59,7 @@ class Detailsexplore extends React.Component {
     var jwttoken = sessionStorage.getItem("token");
     // console.log("jwttoken", jwttoken, " nftTokenIdNumber ", this.props.location.state.tokenID)
     if (jwttoken) {
+
       this.setState({ tokenId: this.props.location.state.tokenID });
       const config = {
         headers: {

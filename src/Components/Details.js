@@ -445,6 +445,7 @@ class Details extends React.Component {
                                         width: "30%",
                                         marginLeft: "10px",
                                         marginTop: "10px",
+                                        padding:"4px"
                                       }}
                                       class="btn btn-primary btn-lg"
                                       onClick={this.cancelListing}
@@ -493,6 +494,7 @@ class Details extends React.Component {
                                 width: "30%",
                                 marginRight: "10px",
                                 marginTop: "10px",
+                                padding:"4px"
                               }}
                               class="btn btn-primary btn-lg"
                             >
@@ -505,6 +507,7 @@ class Details extends React.Component {
                                 width: "30%",
                                 marginLeft: "10px",
                                 marginTop: "10px",
+                                padding:"4px"
                               }}
                               class="btn btn-primary btn-lg"
                             >
@@ -592,7 +595,7 @@ class Details extends React.Component {
                       <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
                         <div className="footer-widget">
                           <h3 className="theme-title">Buy an Item</h3>
-                          <div className="footer-menu-services">
+                          <div className="footer-menu-services">btn btn-primary btn-lg
                             <ul className="menu-service-menu">
                               <li>
                                 <a href="browse.html">Browse Digital Items</a>
@@ -680,10 +683,10 @@ class Details extends React.Component {
           </Modal.Body>
 
           <Modal.Footer style={{ display: "flex", justifyContent: "center" }}>
-            <Button variant="primary" onClick={this.listToken}>
+            <Button className="btn btn-primary btn-lg" style={{width:"30%",padding:"4px"}} onClick={this.listToken}>
               Confirm
             </Button>
-            <Button variant="secondary" onClick={this.closeModal}>
+            <Button className="btn btn-primary btn-lg" style={{width:"30%",padding:"4px"}} onClick={this.closeModal}>
               Close
             </Button>
           </Modal.Footer>
