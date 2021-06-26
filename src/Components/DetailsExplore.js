@@ -161,12 +161,19 @@ class Detailsexplore extends React.Component {
                       data: "",
                     },
                     function (err, transactionHash) {
-                      self.paymentMethod(transactionHash, result[0]);
+                      console.log("errr=====",err)
+                      if(!err){
+                        self.paymentMethod(transactionHash, result[0]);
+                      }else{
+                        self.setState({loader:false})
+                        swal({title:"User cancelled the payment",icon:"info"})
+                      }
                     }
                   );
                 }
               })
               .catch((errorss) => {
+                self.setState({loader:false})
                 console.log("====errors", errorss);
               });
           }
