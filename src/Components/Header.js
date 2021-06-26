@@ -181,12 +181,12 @@ function Header(props) {
 
                     {jwttoken != null ? (
                       <li>
-                        <div className="col-xl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                        <div className="align-items-center">
                           <div className="user-panel-header-top-right clearfix">
                             <div className="user-panel-profile-header">
-                              <h3>
-                                Welcome! {userName}{" "}
-                                <a href="">
+                              <h3 style={{marginTop:"10px"}}>
+                                Welcome! 
+                                <a href="" style={{marginLeft:"50px"}}>
                                   <span onClick={handleStyle}>{initials}</span>
                                 </a>
                               </h3>
@@ -235,10 +235,10 @@ function Header(props) {
         </div>
       </div>
 
-      <div class="header-search-box">
-        <div class="header-search-box-main">
+      <div className="header-search-box">
+        <div className="header-search-box-main">
           <div
-            class="nft-input-box validate-input"
+            className="nft-input-box validate-input"
             data-validate="Name is required"
           >
             <Select
@@ -251,8 +251,8 @@ function Header(props) {
           </div>
         </div>
       </div>
-      <div class="search-close" onClick={hideModal}>
-        <i class="fas fa-times"></i>
+      <div className="search-close" onClick={hideModal}>
+        <i className="fas fa-times"></i>
       </div>
     </>
   );

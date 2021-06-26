@@ -540,6 +540,8 @@ i.fa.fa-eye {
 .admintopheader .navbar{
   background: #000;
     color: #fff;
+      position: fixed;
+
 }
 .navbar-brand{
   color: #fff;
@@ -577,6 +579,7 @@ i.fa.fa-eye {
 .sidebar span {
   display: inline-block;
 }
+
 .sidebar a {
   text-decoration: none;
   color: #fff;
@@ -5943,7 +5946,7 @@ ul, li, ol, li {
     line-height: 35px;
     text-align: center;
     color: #fff;
-    margin-left: 30px;
+    margin-left: -40px;
     font-weight: 800;
     margin-right: -97px;
     margin-top: -2px;
@@ -6051,9 +6054,10 @@ ul, li, ol, li {
     color: black;
   }
   
-  button:hover, a:hover {
+  /* button:hover, a:hover {
     opacity: 0.7;
-  }
+  } */
+
 
  /* ----------------hot collection design----------- */
 

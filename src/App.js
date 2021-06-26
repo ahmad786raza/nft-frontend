@@ -26,6 +26,7 @@ import Profile from './Components/Profile';
 import Detailexplore from './Components/DetailsExplore';
 import Rariable from './Components/Rariable';
 import Usersnft from './Components/Usersnft';
+import Biddetails from './Components/Biddetails';
 
 
 
@@ -51,6 +52,7 @@ function App() {
         <Route exact path="/Detailexplore" component={Detailexplore} />
         <Route exact path="/Rariable" component={Rariable} />
         <Route exact path="/Usersnft" component={Usersnft} />
+        <Route exact path="/Biddetails" component={Biddetails} />
 
 
 

@@ -270,13 +270,13 @@ class Createassets extends React.Component {
 <div>
                 {this.state.loader ? (<Loading loading background="#ffffff00" loaderColor="#3498db" />) : (
                   <div>
-        <section class="gasless-area page-paddings">
-          <div class="container">
-            <div class="row">
-              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="section-title text-center">
+        <section className="gasless-area page-paddings">
+          <div className="container">
+            <div className="row">
+              <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div className="section-title text-center">
                   <h2 data-watermark="Sale">Create Your NFT</h2>
-                  <p class="subtitle">
+                  <p className="subtitle">
                     Start selling your items, all you need is your store to put
                     items. So begin creating your store and start listing items
                     in it.
@@ -284,55 +284,55 @@ class Createassets extends React.Component {
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 offset-xl-2 offset-lg-2 offset-md-2">
-                <div class="mint-item-main-box">
-                  <div class="easy-box">
-                    <div class="mint-item-form">
-                      <div class="theme-input-box">
+            <div className="row">
+              <div className="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 offset-xl-2 offset-lg-2 offset-md-2">
+                <div className="mint-item-main-box">
+                  <div className="easy-box">
+                    <div className="mint-item-form">
+                      <div className="theme-input-box">
                         <label>What kind of item are you making?</label>
-                        <ul class="list-select-item clearfix">
+                        <ul className="list-select-item clearfix">
                           <li>
-                            <span class="active">Digital Art</span>
+                            <span className="active">Digital Art</span>
                           </li>
                           
                         </ul>
                       </div>
-                      <div class="theme-input-box">
+                      <div className="theme-input-box">
                         <label>
                           Asset Name{" "}
                           <i
-                            class="fas fa-exclamation-circle"
+                            className="fas fa-exclamation-circle"
                             data-toggle="tooltip"
                             data-placement="top"
                             title="This is the name of the listing on Mintable - can be the same as the name"
                           ></i>
                         </label>
-                        <input class="theme-input" type="" name=""  value={this.state.assetName} onChange={this.handleAssetName} />
+                        <input className="theme-input" type="" name=""  value={this.state.assetName} onChange={this.handleAssetName} />
                       </div>
-                      {/* <div class="theme-input-box">
+                      {/* <div className="theme-input-box">
                         <label>
                           Price {" "}
                           <i
-                            class="fas fa-exclamation-circle"
+                            className="fas fa-exclamation-circle"
   
                           ></i>
                         </label>
-                        <input class="theme-input" type="" name="" placeholder="Price in BNB" value={this.state.price} onChange={this.handlePrice}  />
+                        <input className="theme-input" type="" name="" placeholder="Price in BNB" value={this.state.price} onChange={this.handlePrice}  />
                       </div> */}
 
-                      <div class="theme-input-box">
+                      <div className="theme-input-box">
                         <label>
                           Upload preview image for your store{" "}
                           <i
-                            class="fas fa-exclamation-circle"
+                            className="fas fa-exclamation-circle"
                             data-toggle="tooltip"
                             data-placement="top"
                             title="This is a private file that only the owner of your NFT can download. Max size 2gb, any file type accepted"
                           ></i>
                         </label>
-                        <div class="theme-file-upload text-center">
-                          <div class="file-upload-ico">
+                        <div className="theme-file-upload text-center">
+                          <div className="file-upload-ico">
                           
                           <label className="custom-file-select">
                                         {this.state.selectedFile ? (
@@ -345,8 +345,8 @@ class Createassets extends React.Component {
 
                             
                           </div>
-                          <h3 class="theme-title">Choose Photo</h3>
-                          <p class="theme-description">
+                          <h3 className="theme-title">Choose Photo</h3>
+                          <p className="theme-description">
                             (items should be images/ GIFs)
                           </p>
                         </div>
@@ -354,19 +354,19 @@ class Createassets extends React.Component {
 
 
 
-                      <div class="theme-input-box">
+                      <div className="theme-input-box">
                         <label>Description</label>
                         <textarea
                           name=""
-                          class="theme-input"
+                          className="theme-input"
                           id="editor"
                           rows="4"
                           value={this.state.description}
                             onChange={this.handleDes}
                         ></textarea>
-                        <p class="theme-description" >
+                        <p className="theme-description" >
                           <i
-                            class="fas fa-exclamation-circle"
+                            className="fas fa-exclamation-circle"
                             data-toggle="tooltip"
                             data-placement="top"
                             title="This is the listing subtitle"
@@ -378,9 +378,9 @@ class Createassets extends React.Component {
                      
                       
                       
-                      <div class="theme-fix-btn">
+                      <div className="theme-fix-btn">
                         <button
-                          class="theme-btn"
+                          className="theme-btn"
  
                           onClick={this.generateNftToken}
                         >
@@ -398,51 +398,51 @@ class Createassets extends React.Component {
         
         
         
-        <footer class="footer-main">
-          <div class="footer-top">
-            <div class="container">
-              <div class="row">
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div class="footer-widget">
+        <footer className="footer-main">
+          <div className="footer-top">
+            <div className="container">
+              <div className="row">
+                <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                  <div className="footer-widget">
                     <a href="/">
                       <img src="assets/images/logo-white.png" alt="" />
                     </a>
-                    <p class="theme-description">
+                    <p className="theme-description">
                       We are one of the best pre-designed template providers,
                       for all the niches with more than 800 designs.{" "}
                     </p>
-                    <div class="footer-links clearfix">
-                      <div class="footer-icon-box">
+                    <div className="footer-links clearfix">
+                      <div className="footer-icon-box">
                         <a
                           href="#"
                           title="Facebook"
                           style={{ color: "#3b5998" }}
                         >
-                          <i class="fab fa-facebook-f"></i>
+                          <i className="fab fa-facebook-f"></i>
                         </a>
                       </div>
-                      <div class="footer-icon-box">
+                      <div className="footer-icon-box">
                         <a href="#" title="Twitter" style={{ color: "#00acee" }}>
-                          <i class="fab fa-twitter"></i>
+                          <i className="fab fa-twitter"></i>
                         </a>
                       </div>
-                      <div class="footer-icon-box">
+                      <div className="footer-icon-box">
                         <a
                           href="#"
                           title="Linkedin"
                           style={{ color: "#0e76a8" }}
                         >
-                          <i class="fab fa-linkedin-in"></i>
+                          <i className="fab fa-linkedin-in"></i>
                         </a>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
-                  <div class="footer-widget">
-                    <h3 class="theme-title">My account</h3>
-                    <div class="footer-menu-services">
-                      <ul class="menu-service-menu">
+                <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
+                  <div className="footer-widget">
+                    <h3 className="theme-title">My account</h3>
+                    <div className="footer-menu-services">
+                      <ul className="menu-service-menu">
                         <li>
                           <a href="/Home">Create a Store</a>
                         </li>
@@ -456,11 +456,11 @@ class Createassets extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
-                  <div class="footer-widget">
-                    <h3 class="theme-title">Need Help?</h3>
-                    <div class="footer-menu-services">
-                      <ul class="menu-service-menu">
+                <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
+                  <div className="footer-widget">
+                    <h3 className="theme-title">Need Help?</h3>
+                    <div className="footer-menu-services">
+                      <ul className="menu-service-menu">
                         <li>
                           <a href="/contact">Help and support</a>
                         </li>
@@ -474,11 +474,11 @@ class Createassets extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
-                  <div class="footer-widget">
-                    <h3 class="theme-title">Buy an Item</h3>
-                    <div class="footer-menu-services">
-                      <ul class="menu-service-menu">
+                <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6 col-12">
+                  <div className="footer-widget">
+                    <h3 className="theme-title">Buy an Item</h3>
+                    <div className="footer-menu-services">
+                      <ul className="menu-service-menu">
                         <li>
                           <a href="/Browse">Browse Digital Items</a>
                         </li>
@@ -492,11 +492,11 @@ class Createassets extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
-                  <div class="footer-widget">
-                    <h3 class="theme-title">Go pro</h3>
-                    <div class="footer-menu-services">
-                      <ul class="menu-service-menu">
+                <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                  <div className="footer-widget">
+                    <h3 className="theme-title">Go pro</h3>
+                    <div className="footer-menu-services">
+                      <ul className="menu-service-menu">
                         <li>
                           <a href="/Gopro">Premium services</a>
                         </li>
@@ -513,11 +513,11 @@ class Createassets extends React.Component {
               </div>
             </div>
           </div>
-          <div class="footer-copyright">
-            <div class="container">
-              <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                  <div class="copyright-text text-center">
+          <div className="footer-copyright">
+            <div className="container">
+              <div className="row">
+                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                  <div className="copyright-text text-center">
                     <p>
                       Copyright 2021 <a href="/">NFT Marketplace</a>{" "}
                       All Rights Reserved.

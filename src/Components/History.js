@@ -165,7 +165,7 @@ class History extends React.Component {
                </header>
 
                <section className="user-panel-main-box">
-                  <div className="container">
+                  <div className="container-fluid">
                      <div className="rows">
                         <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                            <div className="user-panel-main">
@@ -213,14 +213,14 @@ class History extends React.Component {
                                  <div className="rows">
                                     <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                        <div className="transaction-history-box">
-                                          <div className="transaction-history-table theme-table">
+                                          <div className="transaction-history-table theme-table table-responsive">
                                              <table>
                                                 <thead>
                                                    <tr>
                                                       <th>Email</th>
                                                       <th>AssestName</th>
                                                       <th>Owner</th>
-                                                      {/* <th>Ipfshash</th> */}
+                                                      <th>Ipfshash</th>
                                                       <th>Price</th>
                                                       <th>Date</th>
                                                    </tr>
@@ -233,10 +233,10 @@ class History extends React.Component {
                                                       <tr>
                                                          <td>{list.email}</td>
                                                          <td>{list.assetName}</td>
-                                                         <td><a href="">{list.owner}</a> </td>
-                                                         {/* <td><a href="">{list.ipfsHash}</a></td> */}
-                                                         <td><a href="">{list.price}</a></td>
-                                                         <td><a href="">{list.createdAt}</a></td>
+                                                         <td>{list.owner}</td>
+                                                         <td>{list.ipfsHash}</td>
+                                                         <td>{list.price}</td>
+                                                         <td>{list.createdAt}</td>
                                                       </tr>
                                                    </tbody>
 

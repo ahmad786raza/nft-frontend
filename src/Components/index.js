@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import Timer from "./Timer";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
@@ -19,18 +20,70 @@ class Rariable extends React.Component {
       account: "",
       dataList: [],
       allusers: [],
+      time: {}, 
+      seconds: 200,
     };
+
+    this.timer = 0;
+    this.initiatetmer=this.initiatetmer.bind(this)
   }
 
   async componentDidMount() {
     await this.getAllData();
     await this.loadWeb3();
     this.getallusers();
+
+    
+  }
+
+  initiatetmer=(date)=>{
+    this.startTimer()
+    return this.secondsToTime(this.state.seconds);
+    // this.setState({ time: timeLeftVar });
+    // this.startTimer()
+  }
+
+  secondsToTime =(secs)=>{
+    let hours = Math.floor(secs / (60 * 60));
+
+    let divisor_for_minutes = secs % (60 * 60);
+    let minutes = Math.floor(divisor_for_minutes / 60);
+
+    let divisor_for_seconds = divisor_for_minutes % 60;
+    let seconds = Math.ceil(divisor_for_seconds);
+
+    let obj = {
+      "h": hours,
+      "m": minutes,
+      "s": seconds
+    };
+    return hours+':'+minutes+':'+seconds;
+  }
+
+  startTimer=() =>{
+    if (this.timer == 0 && this.state.seconds > 0) {
+      this.timer = setInterval(this.countDown, 1000);
+    }
+  }
+
+  countDown =()=> {
+    // Remove one second, set state so a re-render happens.
+    let seconds = this.state.seconds - 1;
+    this.setState({
+      time: this.secondsToTime(seconds),
+      seconds: seconds,
+    });
+    
+    // Check if we're at zero.
+    if (seconds == 0) { 
+      clearInterval(this.timer);
+    }
   }
 
   
 
-  notSoldClick = (data, email) => {
+  notSoldClick = (data, email, sellingType) => {
+    console.log("sellingtype",sellingType);
     let signeduserEmail = localStorage.getItem("currentUserEmail");
     let jwttoken = sessionStorage.getItem("token");
     console.log("nftsoldclick=====>", data, email);
@@ -39,10 +92,23 @@ class Rariable extends React.Component {
         tokenID: data,
       });
     } else {
+  
+      console.log("sellingtype1");
       if (jwttoken) {
-        this.props.history.push("/Detailexplore", {
-          tokenID: data,
-        });
+        if(sellingType === 'Auction'){
+          console.log("sellingtype2");
+          console.log('option1');
+          this.props.history.push("/Biddetails", {
+            tokenID: data,
+          });
+        }else{
+          console.log('option122');
+          this.props.history.push("/Detailexplore", {
+            tokenID: data,
+          });
+        }
+        
+      
       } else {
         swal({ title: "Unauthorized access! Login first", icon: "error" });
       }
@@ -50,24 +116,43 @@ class Rariable extends React.Component {
   };
 
   notSoldClick1 = (data,email) => {
-    console.log("notsoldmethod====", data,email);
-    var jwttoken = sessionStorage.getItem("token");
-    if (jwttoken) {
+    let signeduserEmail = localStorage.getItem("currentUserEmail");
+    let jwttoken = sessionStorage.getItem("token");
+    console.log("nftsoldclick=====>", data, email);
+    if (signeduserEmail === email) {
       this.props.history.push("/Detail", {
         tokenID: data,
+        email:email
       });
     } else {
-      swal({ title: "Unauthorized Access! Login first", icon: "error" });
+      if (jwttoken) {
+        this.props.history.push("/Biddetails", {
+          tokenID: data,
+          email:email
+        });
+      } else {
+        swal({ title: "Unauthorized access! Login first", icon: "error" });
+      }
     }
   };
 
 usersnft = (email) => {
     var jwttoken = sessionStorage.getItem("token");
+    let signeduserEmail = localStorage.getItem("currentUserEmail");
+
     console.log("email====", email, jwttoken);
     if (jwttoken) {
-      this.props.history.push("/Usersnft", {
-        email: email,
-      });
+
+      if(signeduserEmail === email){
+        this.props.history.push("/Mynft",{
+          email: email,
+        });
+      }else{
+        this.props.history.push("/Usersnft", {
+          email: email,
+        });
+
+      }
     } else {
       swal({ title: "Unauthorized Access! Login first", icon: "error" });
     }
@@ -103,6 +188,7 @@ usersnft = (email) => {
           totalitem: listdata.data.data.length,
           totalData: listdata.data.data,
           dataList: listdata.data.data,
+          
         });
       })
       .catch((errs) => {
@@ -138,17 +224,18 @@ usersnft = (email) => {
                     <div className="promotion-sreact-slider clearfix">
                       <OwlCarousel
                         className="owl-theme"
-                        mouseDrag={true}
+                        mouseDrag={false}
                         slideBy={1}
-                        loop={true}
+                        loop={false}
                         margin={30}
                         items={5}
                         nav={true}
                         dots={false}
                       >
                         {this.state.dataList.map((list) => (
+
                           <div className="promotion-sreact-box">
-                            <div onClick={() => this.notSoldClick(list.tokenId,list.email)}>
+                            <div onClick={() => this.notSoldClick(list.tokenId,list.email, list.sellingtype)}>
                               <div className="promotion-sreact-img">
                                 <img
                                   style={{
@@ -201,7 +288,7 @@ usersnft = (email) => {
                     marginLeft: "20px",
                   }}
                 >
-                  Live auctions
+                  Live Auctions
                   <img
                     style={{
                       height: "40px",
@@ -228,16 +315,16 @@ usersnft = (email) => {
                     <div className="promotion-sreact-slider clearfix">
                       <OwlCarousel
                         className="owl-theme"
-                        mouseDrag={true}
+                        mouseDrag={false}
                         slideBy={1}
-                        loop={true}
+                        loop={false}
                         margin={10}
                         items={5}
                         nav={true}
                         dots={false}
                       >
                         {this.state.dataList.map((list) =>
-                          list.listingtype === "Listed" ? (
+                          list.sellingtype === "Auction" ? (
                             list.soldStatus === "1" ? (
                               <div className="item-group">
                                 <div className="item-group-content">
@@ -319,33 +406,27 @@ usersnft = (email) => {
                                       }}
                                       src={api.IPFS_URL + list.ipfsHash}
                                       alt=""
-                                    />
-                                  </div>
-                                  <h3 className="theme-title">
-                                    <a href="">{list.assetName}</a>
-                                  </h3>
-
-                                  <p className="theme-description">
-                                    <h2 class="item-price">{list.price} BNB</h2>
-                                  </p>
-                                  <p className="theme-description">
-                                    {" "}
-                                    Not Sold{" "}
-                                  </p>
-
-                                  <div className="item-group-btn">
-                                    <a
-                                      className="theme-btn"
                                       onClick={() =>
                                         this.notSoldClick1(list.tokenId,list.email)
                                       }
-                                    >
-                                      Buy Now
-                                    </a>
-                                    <a className="item-detail-btn" href="">
-                                      <i className="fas fa-info-circle"></i>
-                                    </a>
+                                    />
+
                                   </div>
+                                  <h3 className="theme-title">
+                                    <a  onClick={() =>
+                                        this.notSoldClick1(list.tokenId,list.email)
+                                      }
+                                    href="">{list.assetName}</a>
+                                  </h3>
+
+                                  <p className="theme-description">
+                                    <h2 className="item-price">{list.price} BNB</h2>
+                                  </p>
+                                  <p className="theme-description">
+                                  <Timer expiry={list.bidtime}/>
+                                  </p>
+
+              
                                 </div>
                               </div>
                             )
@@ -374,7 +455,7 @@ usersnft = (email) => {
                     marginTop: "20px",
                   }}
                 >
-                  Hot User's collections
+                  Hot User's Collections
                   <img
                     style={{
                       height: "50px",

@@ -318,7 +318,7 @@ class Home extends React.Component {
                                       type="checkbox"
                                       checked={this.state.check1}
                                     />
-                                    <label for="styled-checkbox-1">
+                                    <label htmlFor="styled-checkbox-1">
                                       <span>Art</span>
                                     </label>
                                   </li>
@@ -490,7 +490,7 @@ class Home extends React.Component {
                                               </h3>
 
                                               <p className="theme-description">
-                                                <h2 class="item-price">
+                                                <h2 className="item-price">
                                                   {list.price} BNB
                                                 </h2>
                                               </p>

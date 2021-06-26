@@ -37,23 +37,23 @@ class Profile extends React.Component {
                         <Loading loading background="#ffffff00" loaderColor="#3498db" />
                     ) : (
 
-                        <div class="container" style={{marginTop:"10%",marginBottom:"7%",marginLeft:"40%"}}>
-                        <div class="row">
-                            <div class="col-lg-3 col-sm-6">
+                        <div className="container" style={{marginTop:"10%",marginBottom:"7%",marginLeft:"40%"}}>
+                        <div className="row">
+                            <div className="col-lg-3 col-sm-6">
                     
-                                <div class="card hovercard" style={{height:"400px",width:"400px",borderRadius:12}} >
-                                    <div class="cardheader" style={{width:"100%",height:"50%",backgroundColor:"#0c5adb"}} alt="" ></div>
-                                    <div class="avatar">
+                                <div className="card hovercard" style={{height:"400px",width:"400px",borderRadius:12}} >
+                                    <div className="cardheader" style={{width:"100%",height:"50%",backgroundColor:"#0c5adb"}} alt="" ></div>
+                                    <div className="avatar">
                                         <img alt="" src={Profilepic} />
                                     </div>
-                                    <div class="info">
-                                        <div class="title" style={{marginTop:"20px"}}>
+                                    <div className="info">
+                                        <div className="title" style={{marginTop:"20px"}}>
                                             <a target="_blank" href="https://scripteden.com/">{this.state.userName}</a>
                                         </div>
                                        
-                                        <div class="desc"  style={{marginTop:"20px",fontSize:"20px"}}>{this.state.emailId}</div>
+                                        <div className="desc"  style={{marginTop:"20px",fontSize:"20px"}}>{this.state.emailId}</div>
                                     </div>
-                                    <div class="bottom">
+                                    <div className="bottom">
                                        
                                     </div>
                                 </div>

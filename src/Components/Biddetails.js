@@ -27,7 +27,7 @@ import Timer from "./Timer";
 // };
 const contractAddress = config.Contract_address;
 
-class Details extends React.Component {
+class Biddetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,9 +39,7 @@ class Details extends React.Component {
       tokenId: "",
       dataList: [],
       imageName: "",
-      newModel: false,
       ethadd: config.Platform_address,
-      transHash: "",
       soldstatus: "",
       visible: false,
       loader: false,
@@ -49,11 +47,11 @@ class Details extends React.Component {
       web3: "",
       tokenOwner: "",
       modalOpen: false,
-      modalOpen1: false,
       bidprice: "",
-      bidtime: "",
       sellingtype: "",
-      aucListUser: [],
+      nftUserEmail: "",
+      biddeduser: "",
+      status: ""
     };
   }
 
@@ -63,10 +61,21 @@ class Details extends React.Component {
   }
 
   componentDidMount() {
+    var nftuseremail = this.props.location.state.email;
     var jwttoken = sessionStorage.getItem("token");
-    console.log("jwttoken",jwttoken," nftTokenIdNumber ", this.props.location.state.tokenID);
+    var currentuseremail = localStorage.getItem("currentUserEmail");
+    this.setState({
+      tokenId: this.props.location.state.tokenID,
+      nftUserEmail: nftuseremail,
+    });
+    console.log(
+      "jwttoken",
+      jwttoken,
+      " nftTokenIdNumber ",
+      this.props.location.state.tokenID,
+      nftuseremail
+    );
     if (jwttoken) {
-      this.setState({ tokenId: this.props.location.state.tokenID });
       const config = {
         headers: {
           authtoken: jwttoken,
@@ -87,7 +96,9 @@ class Details extends React.Component {
             description: respo.data.data.description,
             sellingtype: respo.data.data.sellingtype,
             bidtimes: respo.data.data.bidtime,
+            soldstatus:respo.data.data.soldStatus
           });
+          this.checkPlaceAuc(jwttoken,currentuseremail,this.props.location.state.tokenID);
         })
         .catch((er) => {
           // console.log('er', er)
@@ -97,36 +108,8 @@ class Details extends React.Component {
       this.props.history.push("/");
     }
 
-    this.alluserbidlist(this.props.location.state.tokenID);
    
   }
-
-
-  alluserbidlist = (nftTokenId) => {
-    var jwttoken = sessionStorage.getItem("token");
-    this.setState({ loader: true });
-    const config = {
-      headers: {
-        authtoken: jwttoken,
-      },
-    };
-    axios
-      .post(
-        api.API_URL + "nftownerauxlist",
-        {
-          nftTokenId: nftTokenId,
-        },
-        config
-      )
-      .then((aucuserlist) => {
-        console.log("list=======", aucuserlist);
-        this.setState({ loader: false, aucListUser: aucuserlist.data.AucUserlist });
-      })
-      .catch((err) => {
-        console.log("err========", err);
-        this.setState({ loader: false });
-      });
-  };
 
   loadBlockchainData = async () => {
     try {
@@ -163,85 +146,110 @@ class Details extends React.Component {
     }
   };
 
-  placeforbid = () => {
-    this.setState({ modalOpen1: true });
+  closeModal = () => {
+    this.setState({ modalOpen: false });
   };
 
-  closeModal1 = () => {
-    this.setState({ modalOpen1: false });
+  openModal = () => {
+    this.setState({ modalOpen: true });
   };
 
-  handlebidPrice = (event) => {
+  handlePrice = (event) => {
     this.setState({ bidprice: event.target.value });
   };
 
-  handlebidTime = (event) => {
-    this.setState({ bidtime: event.target.value });
+  checkPlaceAuc = (jwttoken, email, nfttokenid) => {
+    console.log("checkPlaceAux method",nfttokenid,email,jwttoken);
+    this.setState({ loader: true });
+    const config = {
+      headers: {
+        authtoken: jwttoken,
+      },
+    };
+    axios
+      .post(
+        api.API_URL + "checkuserauc",
+        {
+          nftTokenId: nfttokenid,
+          email: email,
+        },
+        config
+      )
+      .then((resvalue) => {
+        console.log("resp from check Aux api", resvalue);
+        this.setState({ biddeduser: resvalue.data.data.email,AucPrice: resvalue.data.data.tokenBidPrice, loader: false ,status:resvalue.data.data.status});
+      })
+      .catch((err) => {
+        console.log("error", err);
+        this.setState({ loader: false });
+      });
   };
 
-  placebid = () => {
+  placeAux = () => {
     let biddingPrice = this.state.bidprice;
-    let biddingTime = this.state.bidtime;
     let nfttokenId = this.state.tokenId;
     let jwttoken = sessionStorage.getItem("token");
-    let emailId = localStorage.getItem("currentUserEmail");
-    const ownerethaddress = config.Platform_address;
+    let email = localStorage.getItem("currentUserEmail");
     if (jwttoken) {
-      if (nfttokenId === "" || nfttokenId === null || nfttokenId === undefined ) {
+      if (nfttokenId === "" || nfttokenId === null || nfttokenId === undefined
+      ) {
         swal({ title: "check your nft token id", icon: "info" });
-      } else if (biddingPrice === "" || biddingPrice === null) {
-        swal({ title: "Enter proper bidding price", icon: "info" });
-      } else if (biddingTime === "" || biddingTime === null) {
-        swal({ title: "Enter bidding time", icon: "info" });
+      } else if ( biddingPrice === "" || biddingPrice === null || biddingPrice < this.state.price ) {
+        swal({title:"Bid price should not be null nor less than min bidding amount",icon: "info",});
       } else {
-        this.setState({ modalOpen1: false, loader: true });
-
-        this.state.contract.methods
-        .approve(ownerethaddress, this.state.tokenId)
-        .send({ from: this.state.account })
-        .once("receipt", (receipts, err) => {
-          if(err){
+        this.setState({ modalOpen: false, loader: true });
+        console.log("========", biddingPrice, nfttokenId, email);
+        const config = {
+          headers: {
+            authtoken: jwttoken,
+          },
+        };
+        axios
+          .post(
+            api.API_URL + "placeAuction",
+            {
+              nftTokenId: nfttokenId,
+              bidPrice: biddingPrice,
+              email: email,
+            },
+            config
+          )
+          .then((Aucdetails) => {
+            console.log("Auction saved resp", Aucdetails);
+            this.setState({ loader: false, status : Aucdetails.data.data.status });
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.log("catch block", err);
             this.setState({ loader: false });
-            swal({ title: err, icon: "error" });
-          }else{
-            console.log("========", biddingPrice, nfttokenId, biddingTime);
-            const config = {
-              headers: {
-                authtoken: jwttoken,
-              },
-            };
-            axios
-              .post(
-                api.API_URL + "placebid",
-                {
-                  nftTokenId: nfttokenId,
-                  bidPrice: biddingPrice,
-                  bidtime: biddingTime,
-                  email: emailId,
-                },
-                config
-              )
-              .then((bidresp) => {
-                this.setState({ loader: false });
-                console.log("=======bidresp", bidresp);
-                if (!bidresp) {
-                  swal({ title: "Token not listed for bid", icon: "info" });
-                } else {
-                  swal({ title: "Token listed for bid", icon: "info" });
-                  window.location.reload();
-                }
-              })
-              .catch((errs) => {
-                this.setState({ loader: false });
-                console.log("========errs==bid", errs);
-              });
-          }
-        })
+          });
       }
     } else {
       swal({ title: "Unauthorized Access", icon: "error" });
       this.props.history.push("/");
     }
+  };
+
+  cancelAuc = () => {
+    let nftTokenId = this.state.tokenId;
+    let email = localStorage.getItem("currentUserEmail");
+    var jwttoken = sessionStorage.getItem("token");
+    this.setState({loader:true})
+    const config = {
+      headers: {
+        authtoken: jwttoken,
+      },
+    };
+    axios.post(api.API_URL+'cancelauc',{
+      email:email,
+      nftTokenId:nftTokenId
+    },config).then((deleteddata)=>{
+      console.log("deleted data",deleteddata)
+      this.setState({loader:false,biddeduser:""})
+    }).catch((err)=>{
+      console.log("catch block",err)
+      this.setState({loader:false})
+    })
   };
 
   cancelListing = () => {
@@ -292,11 +300,10 @@ class Details extends React.Component {
     }
   };
 
-
-  // ===============method for Direct sale==========
   listToken = () => {
     var jwttoken = sessionStorage.getItem("token");
-    const ownerethaddress = config.Platform_address;
+    var ownerethaddress = config.Platform_address;
+    var toEmail = localStorage.getItem('currentUserEmail');
     if (jwttoken === "" || jwttoken === null) {
       return swal({ title: "Unauthorized Access", icon: "error" });
     } else if (ownerethaddress === "" || ownerethaddress === null) {
@@ -312,58 +319,56 @@ class Details extends React.Component {
       });
     } else {
       this.setState({ modalOpen: false, loader: true });
-
       if (jwttoken) {
-
-        this.state.contract.methods
-        .approve(ownerethaddress, this.state.tokenId)
-        .send({ from: this.state.account })
-        .once("receipt", (receipts, err) => {
-          console.log("receipts=======>", receipts, err);
-          if (err) {
-            this.setState({ loader: false });
-            swal({ title: err, icon: "error" });
-          } else {
-
-            const config = {
-              headers: {
-                authtoken: jwttoken,
-              },
-            };
-
-            axios
-              .post(
-                api.API_URL + "updateprice",
-                {
-                  tokenId: this.state.tokenId,
-                  price: this.state.price,
-                },
-                config
-              )
-              .then((updated) => {
-                console.log("response from update api", updated);
-               
-                      this.setState({ loader: false,listingType: updated.data.updatedData.listingtype,});
-                      swal({
-                        title: "Your Token has been listed for sale.",
-                        icon: "info",
-                      })
-                        .then((respss) => {
-                          this.props.history.push({
-                            pathname: "/Home",
-                            // state: { tokenIdDetails: updated}
-                          });
-                        })
-                        .catch((errrs) => {
-                          console.log("errror", errrs);
-                        });
-                    })  
-              .catch((errss) => {
-                console.log("errss", errss);
-                this.setState({ loader: false });
+        const config = {
+          headers: {
+            authtoken: jwttoken,
+          },
+        };
+        axios
+          .post(
+            api.API_URL + "updateprice",
+            {
+              tokenId: this.state.tokenId,
+              price: this.state.price,
+            },
+            config
+          )
+          .then((updated) => {
+            console.log("response from update api", updated);
+            this.state.contract.methods
+              .approve(ownerethaddress, this.state.tokenId)
+              .send({ from: this.state.account })
+              .once("receipt", (receipts, err) => {
+                console.log("receipts=======>", receipts, err);
+                if (err) {
+                  this.setState({ loader: false });
+                  swal({ title: err, icon: "error" });
+                } else {
+                  this.setState({
+                    loader: false,
+                    listingType: updated.data.updatedData.listingtype,
+                  });
+                  swal({
+                    title: "Your Token has been listed for sale.",
+                    icon: "info",
+                  })
+                    .then((respss) => {
+                      this.props.history.push({
+                        pathname: "/Home",
+                        // state: { tokenIdDetails: updated}
+                      });
+                    })
+                    .catch((errrs) => {
+                      console.log("errror", errrs);
+                    });
+                }
               });
-          }
-        });
+          })
+          .catch((errss) => {
+            console.log("errss", errss);
+            this.setState({ loader: false });
+          });
       } else {
         swal({ title: "Unauthorized Access", icon: "error" });
         this.props.history.push("/");
@@ -371,25 +376,11 @@ class Details extends React.Component {
     }
   };
 
-  closeModal = () => {
-    this.setState({ modalOpen: false });
-  };
-
-  openModal = () => {
-    this.setState({ modalOpen: true });
-  };
-
-  handlePrice = (event) => {
-    this.setState({ price: event.target.value }, () => {
-      console.log("price", this.state.price);
-    });
-  };
-
   buyToken = () => {
-    console.log("sds", this.state.tokenId);
+    console.log("sds", this.state.AucPrice);
     this.setState({ loader: true });
     var self = this;
-    var price = this.state.price.toString();
+    var price = this.state.AucPrice.toString();
     const { web3 } = window;
     this.state.contract.methods
       .ownerOf(this.state.tokenId)
@@ -437,17 +428,15 @@ class Details extends React.Component {
       });
   };
 
-  // handleHash = (event) => {
-  //     this.setState({ transHash: event.target.value })
-  //   }
-
   paymentMethod = (transhash, receiverAdd) => {
     var token = sessionStorage.getItem("token");
     let assetname = this.state.assetName;
     var txhash = transhash;
-    var payamout = this.state.price;
+    var payamout = this.state.AucPrice;
     var payaddr = receiverAdd;
     var tokenid = this.state.tokenId;
+    var toEmail = localStorage.getItem('currentUserEmail');
+    var toUsername = localStorage.getItem('currentUserName');
     console.log(txhash, "hash&tokenid", tokenid);
     const provider = new ethers.providers.JsonRpcProvider(
       "https://data-seed-prebsc-1-s1.binance.org:8545/"
@@ -478,6 +467,9 @@ class Details extends React.Component {
               newOwnerAddrs: payaddr,
               boughtTokenHash: txhash,
               tokenPrice: payamout,
+              toemail:toEmail,
+              tousername:toUsername
+
             },
             options
           )
@@ -528,7 +520,6 @@ class Details extends React.Component {
                             </div>
                           </div>
                         </div>
-                        
                         <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                           <div className="browse-detail-info">
                             <h1>{this.state.assetName}</h1>
@@ -576,6 +567,7 @@ class Details extends React.Component {
                                 )}
                               </ul>
                             </div>
+
                             {/* <div className="browse-bid-detail">
                           <div className="browse-bid-box">
 
@@ -602,42 +594,26 @@ class Details extends React.Component {
                                 <li>ether</li>
                                 <li>animation</li>
                               </ul>
+                              <ul className="clearfix">
+                                {
+                                  (this.state.biddeduser !== "" && this.state.status === 'REQUESTED') && (
+                                    <li>You have already placed Bid at <b> {this.state.AucPrice}BNB </b>.</li>
+                                  )
+                                }
+                                { (this.state.biddeduser !==  "" && this.state.status === "NOT-WIN") && (
+                              
+                              <li>Sorry to inform you lost this auction.</li>
+                              ) }
+                               { (this.state.biddeduser !==  "" && this.state.status === "WIN") && (
+                              
+                              <li>Congratulations! You have won this auction please click buy now button to claim this NFT</li>
+                              ) }
+                              </ul>
                             </div>
                           </div>
                           <div>
-                            {this.state.sellingtype === "" && (
-                              <div>
-                                <button
-                                  type="button"
-                                  class="btn btn-primary btn-lg"
-                                  style={{
-                                    width: "30%",
-                                    marginRight: "10px",
-                                    marginTop: "10px",
-                                    padding: "4px",
-                                  }}
-                                  onClick={this.placeforbid}
-                                >
-                                  Place For Bid
-                                </button>
-
-                                <button
-                                  type="button"
-                                  onClick={this.openModal}
-                                  style={{
-                                    width: "30%",
-                                    marginLeft: "1px",
-                                    marginTop: "10px",
-                                    padding: "4px",
-                                  }}
-                                  class="btn btn-primary btn-lg"
-                                >
-                                  Direct Sell
-                                </button>
-                              </div>
-                            )}
-
-                            {this.state.sellingtype !== "" && (
+                            { (this.state.biddeduser !==  "" && this.state.status === "REQUESTED") && (
+                              
                               <button
                                 type="button"
                                 class="btn btn-primary btn-lg"
@@ -647,52 +623,69 @@ class Details extends React.Component {
                                   marginTop: "10px",
                                   padding: "4px",
                                 }}
-                                onClick={this.cancelListing}
+                                onClick={this.cancelAuc}
                               >
-                                Cancel{" "}
-                                {this.state.sellingtype === "Auction"
-                                  ? "Auction"
-                                  : "Direct Sell"}
+                                Cancel Bid
                               </button>
+                            ) }
+
+{ (this.state.biddeduser !==  "" && this.state.status === "WIN" && this.state.soldstatus === "0") && (
+                              
+                              <button
+                                type="button"
+                                class="btn btn-primary btn-lg"
+                                style={{
+                                  width: "30%",
+                                  marginRight: "10px",
+                                  marginTop: "10px",
+                                  padding: "4px",
+                                }}
+                               onClick={this.buyToken}
+                              >
+                                BUY NOW
+                              </button>
+                            ) }
+
+
+                            
+{/* 
+                            { (this.state.biddeduser !==  "" && this.state.status === "REQUESTED") && (
+                              
+                              <button
+                                type="button"
+                                class="btn btn-primary btn-lg"
+                                style={{
+                                  width: "30%",
+                                  marginRight: "10px",
+                                  marginTop: "10px",
+                                  padding: "4px",
+                                }}
+                                onClick={this.cancelAuc}
+                              >
+                                Cancel Bid
+                              </button>
+                            ) } */}
+                            
+                            {this.state.biddeduser === '' && (
+                              <button
+                              type="button"
+                              class="btn btn-primary btn-lg"
+                              style={{
+                                width: "30%",
+                                marginRight: "10px",
+                                marginTop: "10px",
+                                padding: "4px",
+                              }}
+                              onClick={this.openModal}
+                            >
+                              Place For Bid
+                            </button>
+                              
                             )}
                           </div>
                         </div>
                       </div>
-
-                      {this.state.sellingtype !== "" && (
-                 <div>
-               {this.state.aucListUser.length !== 0 && (
-                  <h3>Users list who has placed Auction on this NFT.</h3>
-                           )}
-                      <div className="transaction-history-table theme-table table-responsive" style={{marginTop:"30px"}}>
-                              <table>
-                                {
-                                  this.state.aucListUser.length !== 0 &&(
-                                    <thead>
-                                    <tr>
-                                      <th>Email</th>
-                                      <th>Price</th>
-                                      <th>Time</th>
-                                    </tr>
-                                  </thead>
-                                  )
-                                }
-                                {this.state.aucListUser.map((list) => (
-                                  <tbody>
-                                    <tr>
-                                      <td>{list.email}</td>
-                                      <td>{list.tokenBidPrice}</td>
-                                      <td>{list.bidTime}</td>
-                                    </tr>
-                                  </tbody>
-                                ))}
-                              </table>
-                            </div>
-                            </div>
-                      )}
-
-
-                         </div>
+                    </div>
                   </section>
                 </div>
               </div>
@@ -845,12 +838,12 @@ class Details extends React.Component {
             <div className="row">
               <div className="col-md-12" style={{ marginTop: 30 }}>
                 <div>
-                  <label htmlFor="buy">&nbsp; Enter The Selling Price</label>
+                  <label htmlFor="buy">&nbsp; Enter The Bid Price</label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="0.000 BNB"
                     className="form-control"
-                    value={this.state.widAddress}
+                    value={this.state.bidprice}
                     onChange={this.handlePrice}
                   />
                 </div>
@@ -862,7 +855,7 @@ class Details extends React.Component {
             <Button
               className="btn btn-primary btn-lg"
               style={{ width: "30%", padding: "4px" }}
-              onClick={this.listToken}
+              onClick={this.placeAux}
             >
               Confirm
             </Button>
@@ -876,70 +869,9 @@ class Details extends React.Component {
           </Modal.Footer>
         </Modal>
         {/* modal first ends  */}
-
-        {/* modal second start for bidding */}
-        <Modal
-          show={this.state.modalOpen1}
-          backdrop="static"
-          size="lg"
-          onHide={this.closeModal1}
-          centered
-        >
-          {/* <Modal.Header className="modal-header " style={{ paddingLeft: 50}}>
-            <Modal.Title>
-              <h4 className="modal-title" >Price Details</h4>
-            </Modal.Title>
-          </Modal.Header> */}
-
-          <Modal.Body className="text-center">
-            <div className="row">
-              <div className="col-md-12" style={{ marginTop: 30 }}>
-                <div>
-                  <label htmlFor="buy">
-                    &nbsp; Enter The Minimum Bidding Price
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="0.000 BNB"
-                    className="form-control"
-                    value={this.state.bidprice}
-                    onChange={this.handlebidPrice}
-                  />
-                  <label htmlFor="buy">&nbsp; Enter The Bidding Time</label>
-                  <input
-                    type="datetime-local"
-                    placeholder=""
-                    className="form-control"
-                    value={this.state.bidtime}
-                    onChange={this.handlebidTime}
-                  />
-                </div>
-              </div>
-            </div>
-          </Modal.Body>
-
-          <Modal.Footer style={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              className="btn btn-primary btn-lg"
-              style={{ width: "30%", padding: "4px" }}
-              onClick={this.placebid}
-            >
-              Confirm
-            </Button>
-            <Button
-              className="btn btn-primary btn-lg"
-              style={{ width: "30%", padding: "4px" }}
-              onClick={this.closeModal1}
-            >
-              Close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        {/* modal second ends for bidding */}
       </>
     );
   }
 }
 
-export default Details;
+export default Biddetails;
