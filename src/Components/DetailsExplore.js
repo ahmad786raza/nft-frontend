@@ -166,7 +166,7 @@ class Detailsexplore extends React.Component {
                         self.paymentMethod(transactionHash, result[0]);
                       }else{
                         self.setState({loader:false})
-                        swal({title:"User cancelled the payment",icon:"info"})
+                        swal({title:"You cancelled the payment",icon:"info"})
                       }
                     }
                   );

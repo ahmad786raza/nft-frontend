@@ -79,7 +79,15 @@ class Details extends React.Component {
           config
         )
         .then((respo) => {
-          console.log("========respo from single data api", respo);
+        
+var targetTime = new Date(respo.data.data.bidtime);
+console.log(respo.data.data.bidtime);
+var timeZoneFromDB = -7.00; //time zone value from database
+//get the timezone offset from local time in minutes
+var tzDifference = timeZoneFromDB * 60 + targetTime.getTimezoneOffset();
+//convert the offset to milliseconds, add to targetTime, and make a new Date
+var offsetTime = new Date(targetTime.getTime() + tzDifference * 60 * 1000);
+          console.log("========respo from single data api", respo,offsetTime);
           this.setState({
             ipfsHash: respo.data.data.ipfsHash,
             price: respo.data.data.price,
@@ -182,7 +190,7 @@ class Details extends React.Component {
 
   placebid = () => {
     let biddingPrice = this.state.bidprice;
-    let biddingTime = this.state.bidtime;
+    let biddingTime = new Date(this.state.bidtime).toUTCString();
     let nfttokenId = this.state.tokenId;
     let jwttoken = sessionStorage.getItem("token");
     let emailId = localStorage.getItem("currentUserEmail");
@@ -205,7 +213,7 @@ class Details extends React.Component {
             this.setState({ loader: false });
             swal({ title: err, icon: "error" });
           }else{
-            console.log("========", biddingPrice, nfttokenId, biddingTime);
+            console.log("========", biddingPrice, nfttokenId,biddingTime);
             const config = {
               headers: {
                 authtoken: jwttoken,

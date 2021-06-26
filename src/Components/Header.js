@@ -199,7 +199,7 @@ function Header(props) {
                                     <a href="/Profile">Profile</a>
                                   </li>
                                   <li>
-                                    <a href="/Mynft">MyNft</a>
+                                    <a href="/Mynft">My Nft</a>
                                   </li>
                                   {/* <li><a href="/Home">Create a Store</a></li>  */}
                                   <li>
