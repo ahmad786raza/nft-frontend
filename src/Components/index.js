@@ -255,13 +255,13 @@ usersnft = (email) => {
                                   {" "}
                                   {list.assetName}
                                 </h3>
-                                <p
+                                {/* <p
                                   className="theme-title"
                                   style={{ fontSize: 20,color:"#fff" }}
                                 >
                                   {" "}
                                   {list.description.substring(0, 80)}
-                                </p>
+                                </p> */}
 
                                 {/* <p className="theme-description">{list.description}</p> */}
                               </div>
