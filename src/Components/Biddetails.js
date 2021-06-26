@@ -559,8 +559,8 @@ class Biddetails extends React.Component {
                                   Listed for Price:
                                   <span>{this.state.price}</span>
                                 </li>
-                                {this.state.bidtimes &&
-                                this.state.bidtimes != "" ? (
+                               
+                                {this.state.soldstatus.toString() === "0" && this.state.sellingtype === 'Auction' ? (
                                   <Timer expiry={this.state.bidtimes} />
                                 ) : (
                                   ""
@@ -600,11 +600,11 @@ class Biddetails extends React.Component {
                                     <li>You have already placed Bid at <b> {this.state.AucPrice}BNB </b>.</li>
                                   )
                                 }
-                                { (this.state.biddeduser !==  "" && this.state.status === "NOT-WIN") && (
+                                { (this.state.biddeduser !==  "" && this.state.status === "NOT-WIN" && this.state.sellingtype ==="Auction") && (
                               
                               <li>Sorry to inform you lost this auction.</li>
                               ) }
-                               { (this.state.biddeduser !==  "" && this.state.status === "WIN") && (
+                               { (this.state.biddeduser !==  "" && this.state.status === "WIN" && this.state.sellingtype==="Auction") && (
                               
                               <li>Congratulations! You have won this auction please click buy now button to claim this NFT</li>
                               ) }
@@ -666,7 +666,7 @@ class Biddetails extends React.Component {
                               </button>
                             ) } */}
                             
-                            {this.state.biddeduser === '' && (
+                            {(this.state.biddeduser === '' && this.state.sellingtype === 'Auction') && (
                               <button
                               type="button"
                               class="btn btn-primary btn-lg"

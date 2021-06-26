@@ -87,6 +87,7 @@ class Details extends React.Component {
             description: respo.data.data.description,
             sellingtype: respo.data.data.sellingtype,
             bidtimes: respo.data.data.bidtime,
+            soldstatus: respo.data.data.soldStatus,
           });
         })
         .catch((er) => {
@@ -350,7 +351,7 @@ class Details extends React.Component {
                       })
                         .then((respss) => {
                           this.props.history.push({
-                            pathname: "/Home",
+                            pathname: "/Mynft",
                             // state: { tokenIdDetails: updated}
                           });
                         })
@@ -568,8 +569,8 @@ class Details extends React.Component {
                                   Listed for Price:
                                   <span>{this.state.price}</span>
                                 </li>
-                                {this.state.bidtimes &&
-                                this.state.bidtimes != "" ? (
+
+                                {this.state.soldstatus === "0" && this.state.sellingType === 'Auction' ? (
                                   <Timer expiry={this.state.bidtimes} />
                                 ) : (
                                   ""
@@ -605,6 +606,7 @@ class Details extends React.Component {
                             </div>
                           </div>
                           <div>
+                           
                             {this.state.sellingtype === "" && (
                               <div>
                                 <button
@@ -637,7 +639,9 @@ class Details extends React.Component {
                               </div>
                             )}
 
-                            {this.state.sellingtype !== "" && (
+                           
+                           
+                            {(this.state.sellingtype !== "" && this.state.soldstatus === "0") && (
                               <button
                                 type="button"
                                 class="btn btn-primary btn-lg"
@@ -661,13 +665,14 @@ class Details extends React.Component {
 
                       {this.state.sellingtype !== "" && (
                  <div>
-               {this.state.aucListUser.length !== 0 && (
+               {(this.state.aucListUser.length !== 0  && this.state.soldstatus === "0" ) && (
                   <h3>Users list who has placed Auction on this NFT.</h3>
                            )}
                       <div className="transaction-history-table theme-table table-responsive" style={{marginTop:"30px"}}>
-                              <table>
+                              
                                 {
-                                  this.state.aucListUser.length !== 0 &&(
+                                  (this.state.aucListUser.length !== 0 && this.state.soldstatus === "0" ) &&(
+                                    <table>
                                     <thead>
                                     <tr>
                                       <th>Email</th>
@@ -675,18 +680,19 @@ class Details extends React.Component {
                                       <th>Time</th>
                                     </tr>
                                   </thead>
-                                  )
-                                }
-                                {this.state.aucListUser.map((list) => (
+                                 
                                   <tbody>
+                                 { this.state.aucListUser.map((list) => (
                                     <tr>
                                       <td>{list.email}</td>
                                       <td>{list.tokenBidPrice}</td>
                                       <td>{list.bidTime}</td>
                                     </tr>
+                                  ))}
                                   </tbody>
-                                ))}
-                              </table>
+                                  </table>
+                                )}
+                              
                             </div>
                             </div>
                       )}

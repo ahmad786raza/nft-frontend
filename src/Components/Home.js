@@ -161,15 +161,36 @@ class Home extends React.Component {
       });
   };
 
-  notSoldClick = (data) => {
-    console.log("shomodal=====", data);
+  notSoldClick = (data, email, sellingType) => {
+    console.log("", data);
     var jwttoken = sessionStorage.getItem("token");
-    if (jwttoken) {
-      this.props.history.push("/Detailexplore", {
+    let signeduserEmail = localStorage.getItem("currentUserEmail");
+    console.log("nftsoldclick=====>", data, email);
+    if (signeduserEmail === email) {
+      this.props.history.push("/Detail", {
         tokenID: data,
       });
     } else {
-      swal({ title: "Unauthorized access! Login first", icon: "error" });
+  
+      console.log("sellingtype1");
+      if (jwttoken) {
+        if(sellingType === 'Auction'){
+          console.log("sellingtype2");
+          console.log('option1');
+          this.props.history.push("/Biddetails", {
+            tokenID: data,
+          });
+        }else{
+          console.log('option122');
+          this.props.history.push("/Detailexplore", {
+            tokenID: data,
+          });
+        }
+        
+      
+      } else {
+        swal({ title: "Unauthorized access! Login first", icon: "error" });
+      }
     }
   };
 
@@ -408,6 +429,7 @@ class Home extends React.Component {
                               >
                                 <div className="row">
                                   {this.state.dataList.map((list) =>
+                                 
                                     list.listingtype === "Listed" ? (
                                       list.soldStatus === "1" ? (
                                         <div className="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -429,7 +451,11 @@ class Home extends React.Component {
                                                 />
                                               </div>
                                               <h3 className="theme-title">
-                                                <a href="">{list.assetName}</a>
+                                                <a  onClick={() =>
+                                                    this.notSoldClick(
+                                                      list.tokenId,list.email,list.sellingtype
+                                                    )
+                                                  } href="">{list.assetName}</a>
                                               </h3>
 
                                               <p className="theme-description">
@@ -438,28 +464,10 @@ class Home extends React.Component {
                                                 </h2>
                                               </p>
                                               <p className="theme-description">
-                                                {" "}
-                                                Sold{" "}
+                                                {list.sellingtype}
                                               </p>
 
-                                              <div className="item-group-btn">
-                                                <a
-                                                  className="theme-btn btn-disabled  text-muted disabled"
-                                                  onClick={() =>
-                                                    this.notSoldClick(
-                                                      list.tokenId
-                                                    )
-                                                  }
-                                                >
-                                                  Sold Out
-                                                </a>
-                                                <a
-                                                  className="item-detail-btn"
-                                                  href=""
-                                                >
-                                                  <i className="fas fa-info-circle"></i>
-                                                </a>
-                                              </div>
+                                            
                                             </div>
                                           </div>
                                         </div>
@@ -486,7 +494,11 @@ class Home extends React.Component {
                                                 />
                                               </div>
                                               <h3 className="theme-title">
-                                                <a href="">{list.assetName}</a>
+                                                <a onClick={() =>
+                                                    this.notSoldClick(
+                                                      list.tokenId,list.email,list.sellingtype
+                                                    )
+                                                  } href="">{list.assetName}</a>
                                               </h3>
 
                                               <p className="theme-description">
@@ -495,16 +507,16 @@ class Home extends React.Component {
                                                 </h2>
                                               </p>
                                               <p className="theme-description">
-                                                {" "}
-                                                Not Sold{" "}
+                                                
+                                                  {list.sellingtype}
                                               </p>
 
-                                              <div className="item-group-btn">
+                                              {/* <div className="item-group-btn">
                                                 <a
                                                   className="theme-btn"
                                                   onClick={() =>
                                                     this.notSoldClick(
-                                                      list.tokenId
+                                                      list.tokenId,list.email,list.sellingtype
                                                     )
                                                   }
                                                 >
@@ -516,7 +528,7 @@ class Home extends React.Component {
                                                 >
                                                   <i className="fas fa-info-circle"></i>
                                                 </a>
-                                              </div>
+                                              </div> */}
                                             </div>
                                           </div>
                                         </div>
